@@ -17,6 +17,7 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Helper method to safely launch URLs
   Future<void> _openLink(BuildContext context, String urlString) async {
     final Uri url = Uri.parse(urlString);
+    final colorScheme = Theme.of(context).colorScheme;
 
     // Check if the browser/device supports opening this link
     if (await canLaunchUrl(url)) {
@@ -37,10 +38,10 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
             style: TextStyle(
               fontFamily: AppFonts.born2B,
               fontSize: 16,
-              color: Theme.of(context).colorScheme.onErrorContainer,
+              color: colorScheme.onErrorContainer,
             ),
           ),
-          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+          backgroundColor: colorScheme.errorContainer,
           behavior: .floating,
           shape: RoundedRectangleBorder(borderRadius: .circular(8)),
           duration: const Duration(seconds: 3),
@@ -51,6 +52,7 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return AppBar(
       leading: leading,
       title: Text(
@@ -63,11 +65,11 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
         // Dark Mode Toggle
         ValueListenableBuilder<ThemeMode>(
           valueListenable: themeNotifier,
-          builder: (context, currentMode, child) {
+          builder: (_, currentMode, _) {
             return IconButton(
               icon: Icon(
                 currentMode == .light ? Icons.dark_mode : Icons.light_mode,
-                color: Theme.of(context).colorScheme.primary,
+                color: colorScheme.primary,
                 size: 28,
               ),
               onPressed: () {
@@ -83,7 +85,7 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
             style: TextStyle(
               fontSize: 24,
               fontWeight: .bold,
-              color: Theme.of(context).colorScheme.primary,
+              color: colorScheme.primary,
             ),
           ),
           onPressed: () => _openLink(context, "https://x.com/JhonAndreDC"),

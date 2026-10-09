@@ -38,12 +38,13 @@ class _ResourcesPageState extends State<ResourcesPage> {
 
   /// Builds the grid of category cards
   Widget _buildCategoryGrid() {
+    final colorScheme = Theme.of(context).colorScheme;
     final categories = ResourceCategory.values;
 
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 1000),
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const .all(24.0),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 300,
@@ -65,15 +66,11 @@ class _ResourcesPageState extends State<ResourcesPage> {
                   });
                 },
                 child: Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const .all(24.0),
                   child: Column(
                     mainAxisAlignment: .center,
                     children: [
-                      Icon(
-                        category.icon,
-                        size: 48,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                      Icon(category.icon, size: 48, color: colorScheme.primary),
                       const SizedBox(height: 16),
                       Text(
                         category.title,
@@ -81,7 +78,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
                         style: TextStyle(
                           fontSize: 20,
                           fontFamily: AppFonts.born2B,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: colorScheme.primary,
                         ),
                       ),
                     ],
@@ -97,6 +94,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
 
   /// Builds the content area based on the selected category
   Widget _buildCategoryContent() {
+    final colorScheme = Theme.of(context).colorScheme;
     final localNeuteringWidgets = [
       const Text(
         'Free Neutering',
@@ -108,7 +106,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
         style: TextStyle(
           fontSize: 18,
           height: 1.5,
-          color: Theme.of(context).colorScheme.onSurface,
+          color: colorScheme.onSurface,
         ),
       ),
       const SizedBox(height: 40),
@@ -117,15 +115,15 @@ class _ResourcesPageState extends State<ResourcesPage> {
         style: TextStyle(
           fontSize: 20,
           fontFamily: AppFonts.born2B,
-          color: Theme.of(context).colorScheme.primary,
+          color: colorScheme.primary,
         ),
       ),
       const SizedBox(height: 12),
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          border: .all(color: Theme.of(context).colorScheme.primary, width: 4),
+          color: colorScheme.surface,
+          border: .all(color: colorScheme.primary, width: 4),
           borderRadius: .circular(12),
         ),
         child: DropdownButtonHideUnderline(
@@ -138,7 +136,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
             isExpanded: true,
             icon: Icon(
               Icons.arrow_drop_down,
-              color: Theme.of(context).colorScheme.primary,
+              color: colorScheme.primary,
               size: 32,
             ),
             items: CityResource.neuteringResources.map((resource) {
@@ -165,20 +163,20 @@ class _ResourcesPageState extends State<ResourcesPage> {
     final placeHolderWidgets = [
       Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 80.0),
+          padding: const .symmetric(vertical: 80.0),
           child: Column(
             children: [
               Icon(
                 Icons.construction,
                 size: 80,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
               ),
               const SizedBox(height: 24),
               Text(
                 'Content for ${_selectedCategory?.title} is coming soon!',
                 style: TextStyle(
                   fontSize: 24,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                   fontFamily: AppFonts.born2B,
                 ),
               ),
@@ -191,20 +189,17 @@ class _ResourcesPageState extends State<ResourcesPage> {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 900),
       child: ListView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const .all(24.0),
         children: [
           // Back Button
           Align(
-            alignment: Alignment.centerLeft,
+            alignment: .centerLeft,
             child: TextButton.icon(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+              icon: Icon(Icons.arrow_back, color: colorScheme.primary),
               label: Text(
                 'Back to Categories',
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: colorScheme.primary,
                   fontSize: 16,
                   fontFamily: AppFonts.born2B,
                 ),
@@ -229,11 +224,12 @@ class _ResourcesPageState extends State<ResourcesPage> {
   }
 
   Widget _buildSelectedCityCard(CityResource resource) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: .circular(16)),
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const .all(32.0),
         child: Column(
           crossAxisAlignment: .start,
           children: [
@@ -242,19 +238,16 @@ class _ResourcesPageState extends State<ResourcesPage> {
               style: TextStyle(
                 fontSize: 28,
                 fontFamily: AppFonts.born2B,
-                color: Theme.of(context).colorScheme.primary,
+                color: colorScheme.primary,
               ),
             ),
-            Divider(
-              height: 32,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+            Divider(height: 32, color: colorScheme.onSurfaceVariant),
             Text(
               resource.details,
               style: TextStyle(
                 fontSize: 16,
                 height: 1.5,
-                color: Theme.of(context).colorScheme.onSurface,
+                color: colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 24),
@@ -268,19 +261,19 @@ class _ResourcesPageState extends State<ResourcesPage> {
                 fontSize: 18,
                 fontWeight: .bold,
                 fontFamily: AppFonts.liberationSans,
-                color: Theme.of(context).colorScheme.primary,
+                color: colorScheme.primary,
               ),
             ),
             const SizedBox(height: 12),
             ...resource.requirements.map(
               (req) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
+                padding: const .only(bottom: 8.0),
                 child: Row(
                   children: [
                     Icon(
                       Icons.check_circle,
                       size: 20,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: colorScheme.primary,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -297,9 +290,10 @@ class _ResourcesPageState extends State<ResourcesPage> {
   }
 
   Widget _buildDetailRow(IconData icon, String label, String value) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       children: [
-        Icon(icon, color: Theme.of(context).colorScheme.primary, size: 20),
+        Icon(icon, color: colorScheme.primary, size: 20),
         const SizedBox(width: 12),
         Text(
           "$label ",
@@ -313,7 +307,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
           value,
           style: TextStyle(
             fontSize: 16,
-            color: Theme.of(context).colorScheme.primary,
+            color: colorScheme.primary,
             decoration: .underline,
           ),
         ),

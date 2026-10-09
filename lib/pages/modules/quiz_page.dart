@@ -78,7 +78,7 @@ class _QuizPageState extends State<QuizPage> {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
           child: Padding(
-            padding: const EdgeInsets.all(32.0),
+            padding: const .all(32.0),
             child: _isFinished ? _buildResultsView() : _buildQuizView(quiz),
           ),
         ),
@@ -87,20 +87,21 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   Widget _buildQuizView(Quiz quiz) {
+    final colorScheme = Theme.of(context).colorScheme;
     final question = quiz.questions[_currentQuestionIndex];
 
     final optionsList = List.generate(question.options.length, (index) {
       final isSelected = _selectedOptionIndex == index;
       final container = Container(
-        padding: const EdgeInsets.all(20),
+        padding: const .all(20),
         decoration: BoxDecoration(
           color: isSelected
-              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
-              : Theme.of(context).colorScheme.surfaceContainer,
+              ? colorScheme.primary.withValues(alpha: 0.1)
+              : colorScheme.surfaceContainer,
           border: .all(
             color: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.outlineVariant,
+                ? colorScheme.primary
+                : colorScheme.outlineVariant,
             width: 2,
           ),
           borderRadius: .circular(12),
@@ -112,8 +113,8 @@ class _QuizPageState extends State<QuizPage> {
                   ? Icons.radio_button_checked
                   : Icons.radio_button_unchecked,
               color: isSelected
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.outlineVariant,
+                  ? colorScheme.primary
+                  : colorScheme.outlineVariant,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -127,7 +128,7 @@ class _QuizPageState extends State<QuizPage> {
       );
 
       return Padding(
-        padding: const EdgeInsets.only(bottom: 12.0),
+        padding: const .only(bottom: 12.0),
         child: InkWell(
           onTap: () => setState(() => _selectedOptionIndex = index),
           child: container,
@@ -159,8 +160,8 @@ class _QuizPageState extends State<QuizPage> {
           height: 60,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
               shape: RoundedRectangleBorder(borderRadius: .circular(12)),
             ),
             onPressed: _selectedOptionIndex == null ? null : _submitAnswer,
@@ -201,7 +202,7 @@ class _QuizPageState extends State<QuizPage> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          padding: const .symmetric(horizontal: 40, vertical: 20),
         ),
         onPressed: () => context.go(AppRoutes.chapterPath(widget.chapterId)),
         child: const Text(

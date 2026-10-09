@@ -11,10 +11,12 @@ class MainLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final userProfile = ValueListenableBuilder<String?>(
       valueListenable: userNotifier,
-      builder: (context, username, child) {
+      builder: (_, username, _) {
         final name = username ?? "Guest";
+        final colorScheme = Theme.of(context).colorScheme;
 
         return ListTile(
           contentPadding: const EdgeInsets.symmetric(
@@ -22,8 +24,8 @@ class MainLayout extends StatelessWidget {
             vertical: 8,
           ),
           leading: CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.onPrimary,
-            foregroundColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: colorScheme.onPrimary,
+            foregroundColor: colorScheme.primary,
             child: Text(
               name.isNotEmpty ? name[0].toUpperCase() : "?",
               style: const TextStyle(fontFamily: AppFonts.born2B, fontSize: 24),
@@ -33,7 +35,7 @@ class MainLayout extends StatelessWidget {
           title: Text(
             name,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: colorScheme.onPrimary,
               fontFamily: AppFonts.born2B,
               fontSize: 16,
             ),
@@ -54,7 +56,7 @@ class MainLayout extends StatelessWidget {
 
     final leftPanel = Container(
       width: 260,
-      color: Theme.of(context).colorScheme.primary,
+      color: colorScheme.primary,
       child: Column(
         children: [
           Expanded(
@@ -83,7 +85,7 @@ class MainLayout extends StatelessWidget {
 
     final rightPanel = Expanded(
       child: Container(
-        color: Theme.of(context).colorScheme.surfaceContainer,
+        color: colorScheme.surfaceContainer,
         child: navigationShell,
       ),
     );

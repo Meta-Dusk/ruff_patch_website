@@ -5,19 +5,17 @@ class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: GlobalAppBar(title: "Dashboard"),
-      body: Center(
-        child: Text(
-          'User Progress & Analytics will go here.',
-          style: TextStyle(
-            fontSize: 20,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: Colors.transparent,
+    appBar: GlobalAppBar(title: "Dashboard"),
+    body: Center(
+      child: Text(
+        'User Progress & Analytics will go here.',
+        style: TextStyle(
+          fontSize: 20,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
       ),
-    );
-  }
+    ),
+  );
 }

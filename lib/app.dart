@@ -8,31 +8,27 @@ class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: themeNotifier,
-      builder: (_, currentMode, _) {
-        return MaterialApp.router(
-          title: "Capstone Website",
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF403474),
-              brightness: .light,
-            ),
-            useMaterial3: true,
-          ),
-          darkTheme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF403474),
-              brightness: .dark,
-            ),
-            useMaterial3: true,
-          ),
-          themeMode: currentMode,
-          routerConfig: goRouter,
-        );
-      },
-    );
-  }
+  Widget build(BuildContext context) => ValueListenableBuilder<ThemeMode>(
+    valueListenable: themeNotifier,
+    builder: (_, currentMode, _) => MaterialApp.router(
+      title: "Capstone Website",
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF403474),
+          brightness: .light,
+        ),
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF403474),
+          brightness: .dark,
+        ),
+        useMaterial3: true,
+      ),
+      themeMode: currentMode,
+      routerConfig: goRouter,
+    ),
+  );
 }

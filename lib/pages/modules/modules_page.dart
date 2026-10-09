@@ -9,39 +9,42 @@ class ModulesPage extends StatelessWidget {
   const ModulesPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: GlobalAppBar(title: "Modules"),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 380,
-            crossAxisSpacing: 24,
-            mainAxisSpacing: 24,
-            childAspectRatio: 0.9,
-          ),
-          itemCount: Chapter.allChapters.length,
-          itemBuilder: (context, index) {
-            return _buildChapterCard(context, Chapter.allChapters[index]);
-          },
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: Colors.transparent,
+    appBar: GlobalAppBar(title: "Modules"),
+    body: Padding(
+      padding: const .all(24.0),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 380,
+          crossAxisSpacing: 24,
+          mainAxisSpacing: 24,
+          childAspectRatio: 0.9,
         ),
+        itemCount: Chapter.allChapters.length,
+        itemBuilder: (_, index) {
+          return ChapterCard(chapter: .allChapters[index]);
+        },
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildChapterCard(BuildContext context, Chapter chapter) {
-    return Card(
-      elevation: 6,
-      clipBehavior: .antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: .circular(16)),
-      child: InkWell(
-        onTap: () => context.go(AppRoutes.chapterPath(chapter.id)),
-        child: _chapterCardContent(context, chapter),
-      ),
-    );
-  }
+class ChapterCard extends StatelessWidget {
+  final Chapter chapter;
+
+  const ChapterCard({super.key, required this.chapter});
+
+  @override
+  Widget build(BuildContext context) => Card(
+    elevation: 6,
+    clipBehavior: .antiAlias,
+    shape: RoundedRectangleBorder(borderRadius: .circular(16)),
+    child: InkWell(
+      onTap: () => context.go(AppRoutes.chapterPath(chapter.id)),
+      child: _chapterCardContent(context, chapter),
+    ),
+  );
 
   Widget _chapterCardContent(BuildContext context, Chapter chapter) {
     final topBanner = Expanded(
@@ -86,20 +89,16 @@ class ModulesPage extends StatelessWidget {
     final footerDetails = Row(
       mainAxisAlignment: .spaceBetween,
       children: [
-        _buildBadge(context, icon: Icons.schedule, label: chapter.duration),
+        _Badge(icon: Icons.schedule, label: chapter.duration),
         if (chapter.quiz != null)
-          _buildBadge(
-            context,
-            icon: Icons.quiz_outlined,
-            label: 'Includes Quiz',
-          ),
+          _Badge(icon: Icons.quiz_outlined, label: 'Includes Quiz'),
       ],
     );
 
     final bottomContent = Expanded(
       flex: 4,
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const .all(20.0),
         child: Column(
           crossAxisAlignment: .start,
           children: [
@@ -141,13 +140,16 @@ class ModulesPage extends StatelessWidget {
       ],
     );
   }
+}
 
-  /// Helper widget for the info chips
-  Widget _buildBadge(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-  }) {
+class _Badge extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _Badge({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
     final badgeColor = Theme.of(context).colorScheme.primary;
     return Row(
       children: [

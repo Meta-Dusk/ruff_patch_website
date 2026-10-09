@@ -7,22 +7,21 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final announcementPlaceholder = Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(32),
+      padding: const .all(32),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+        color: colorScheme.primary.withValues(alpha: 0.1),
         borderRadius: .circular(16),
-        border: .all(
-          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-        ),
+        border: .all(color: colorScheme.primary.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: .start,
         children: [
           Row(
             children: [
-              Icon(Icons.star, color: Theme.of(context).colorScheme.primary),
+              Icon(Icons.star, color: colorScheme.primary),
               SizedBox(width: 8),
               Text(
                 "Quiz Available!",
@@ -44,7 +43,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       appBar: GlobalAppBar(title: "Home"),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const .all(24.0),
         child: Column(
           crossAxisAlignment: .start,
           children: [
@@ -53,16 +52,13 @@ class HomePage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 48,
                 fontFamily: AppFonts.born2B,
-                color: Theme.of(context).colorScheme.primary,
+                color: colorScheme.primary,
               ),
             ),
             const SizedBox(height: 16),
             Text(
               "Pick up where you left off or explore new modules.",
-              style: TextStyle(
-                fontSize: 18,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
+              style: TextStyle(fontSize: 18, color: colorScheme.onSurface),
             ),
             const SizedBox(height: 40),
             announcementPlaceholder,

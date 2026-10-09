@@ -46,6 +46,8 @@ class _ChapterPageState extends State<ChapterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (_currentChapter == null) {
       return Scaffold(
         appBar: AppBar(title: const Text("Chapter Not Found")),
@@ -55,30 +57,28 @@ class _ChapterPageState extends State<ChapterPage> {
 
     final youtubeVideoWidget = Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onSurface,
-        borderRadius: BorderRadius.circular(16),
+        color: colorScheme.onSurface,
+        borderRadius: .circular(16),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(
-              context,
-            ).colorScheme.onSurface.withValues(alpha: 0.2),
+            color: colorScheme.onSurface.withValues(alpha: 0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: .circular(16),
         child: YoutubePlayer(controller: _controller, aspectRatio: 16 / 9),
       ),
     );
 
     final quizSection = Container(
-      padding: const EdgeInsets.all(32),
+      padding: const .all(32),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).colorScheme.primary),
+        color: colorScheme.primary.withValues(alpha: 0.1),
+        borderRadius: .circular(16),
+        border: .all(color: colorScheme.primary),
       ),
       child: Column(
         children: [
@@ -93,9 +93,9 @@ class _ChapterPageState extends State<ChapterPage> {
           const SizedBox(height: 16),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.surfaceContainer,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.surfaceContainer,
+              padding: const .symmetric(horizontal: 32, vertical: 20),
               textStyle: const TextStyle(
                 fontSize: 18,
                 fontFamily: AppFonts.born2B,
@@ -116,7 +116,7 @@ class _ChapterPageState extends State<ChapterPage> {
         maxWidth: 900,
       ), // Keep content from stretching too wide on a desktop monitor
       child: ListView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const .all(24.0),
         children: [
           youtubeVideoWidget,
           const SizedBox(height: 40),

@@ -28,65 +28,63 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final cardContent = [
+      Image.asset(AppAssets.logo),
+      const SizedBox(height: 24),
+      Text(
+        'Welcome to Ruff Patch',
+        textAlign: .center,
+        style: TextStyle(
+          fontSize: 28,
+          fontFamily: AppFonts.born2B,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+      const SizedBox(height: 32),
+      TextField(
+        controller: _usernameController,
+        decoration: InputDecoration(
+          labelText: "Enter a display name",
+          border: OutlineInputBorder(borderRadius: .circular(12)),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: .circular(12),
+            borderSide: BorderSide(color: colorScheme.primary, width: 2),
+          ),
+        ),
+        onSubmitted: (_) => _handleLogin(),
+      ),
+      const SizedBox(height: 32),
+      SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: colorScheme.primary,
+            foregroundColor: colorScheme.onPrimary,
+            shape: RoundedRectangleBorder(borderRadius: .circular(12)),
+          ),
+          onPressed: _handleLogin,
+          child: const Text(
+            'Enter the Patch',
+            style: TextStyle(fontSize: 18, fontFamily: AppFonts.born2B),
+          ),
+        ),
+      ),
+    ];
+
     final card = Card(
       elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: .circular(24)),
       child: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisSize: .min,
-          children: [
-            Image.asset(AppAssets.logo),
-            const SizedBox(height: 24),
-            Text(
-              'Welcome to Ruff Patch',
-              textAlign: .center,
-              style: TextStyle(
-                fontSize: 28,
-                fontFamily: AppFonts.born2B,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 32),
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                labelText: "Enter a display name",
-                border: OutlineInputBorder(borderRadius: .circular(12)),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: .circular(12),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 2,
-                  ),
-                ),
-              ),
-              onSubmitted: (_) => _handleLogin(),
-            ),
-            const SizedBox(height: 32),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  shape: RoundedRectangleBorder(borderRadius: .circular(12)),
-                ),
-                onPressed: _handleLogin,
-                child: const Text(
-                  'Enter the Patch',
-                  style: TextStyle(fontSize: 18, fontFamily: AppFonts.born2B),
-                ),
-              ),
-            ),
-          ],
-        ),
+        padding: const .all(40.0),
+        child: Column(mainAxisSize: .min, children: cardContent),
       ),
     );
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: colorScheme.surface,
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 400),

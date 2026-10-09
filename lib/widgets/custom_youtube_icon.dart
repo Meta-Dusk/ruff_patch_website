@@ -8,8 +8,9 @@ class CustomYoutubeIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor = color ?? Theme.of(context).colorScheme.primary;
-    final triangleColor = Theme.of(context).colorScheme.onPrimary;
+    final colorScheme = Theme.of(context).colorScheme;
+    final effectiveColor = color ?? colorScheme.primary;
+    final triangleColor = colorScheme.onPrimary;
 
     return SizedBox(
       width: size,
@@ -17,7 +18,7 @@ class CustomYoutubeIcon extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: effectiveColor,
-          borderRadius: BorderRadius.circular(size * 0.22),
+          borderRadius: .circular(size * 0.22),
         ),
         child: Center(
           child: Icon(

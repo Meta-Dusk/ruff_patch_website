@@ -15,13 +15,13 @@ class CustomInstagramIcon extends StatelessWidget {
       width: size,
       height: size,
       child: Stack(
-        alignment: Alignment.center,
+        alignment: .center,
         children: [
           // The Outer Rounded Square
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(size * 0.25),
-              border: Border.all(color: effectiveColor, width: strokeWidth),
+              borderRadius: .circular(size * 0.25),
+              border: .all(color: effectiveColor, width: strokeWidth),
             ),
           ),
           // The Inner Circle (Camera Lens)
@@ -29,8 +29,8 @@ class CustomInstagramIcon extends StatelessWidget {
             width: size * 0.45,
             height: size * 0.45,
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: effectiveColor, width: strokeWidth),
+              shape: .circle,
+              border: .all(color: effectiveColor, width: strokeWidth),
             ),
           ),
           // The Top Right Dot (Flash/Sensor)
@@ -41,10 +41,7 @@ class CustomInstagramIcon extends StatelessWidget {
               // Make the dot slightly thicker than the lines
               width: strokeWidth * 1.2,
               height: strokeWidth * 1.2,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: effectiveColor,
-              ),
+              decoration: BoxDecoration(shape: .circle, color: effectiveColor),
             ),
           ),
         ],

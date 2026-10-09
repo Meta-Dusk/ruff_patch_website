@@ -15,20 +15,10 @@ class BlackboardSidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final navItems = [
-      _buildNavItem(context, icon: Icons.house, title: "Home", index: 0),
-      _buildNavItem(
-        context,
-        icon: Icons.library_books,
-        title: "Modules",
-        index: 1,
-      ),
-      _buildNavItem(context, icon: Icons.book, title: "Resources", index: 2),
-      _buildNavItem(
-        context,
-        icon: Icons.dashboard,
-        title: "Dashboard",
-        index: 3,
-      ),
+      _buildNavItem(icon: Icons.house, title: "Home", index: 0),
+      _buildNavItem(icon: Icons.library_books, title: "Modules", index: 1),
+      _buildNavItem(icon: Icons.book, title: "Resources", index: 2),
+      _buildNavItem(icon: Icons.dashboard, title: "Dashboard", index: 3),
     ];
 
     return Container(
@@ -52,17 +42,41 @@ class BlackboardSidebar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(
-    BuildContext context, {
+  Widget _buildNavItem({
     required IconData icon,
     required String title,
     required int index,
-  }) {
+  }) => NavItem(
+    icon: icon,
+    title: title,
+    index: index,
+    selectedIndex: selectedIndex,
+    onItemSelected: onItemSelected,
+  );
+}
+
+class NavItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final int index;
+  final int selectedIndex;
+  final ValueChanged<int> onItemSelected;
+
+  const NavItem({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.index,
+    required this.selectedIndex,
+    required this.onItemSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final isSelected = selectedIndex == index;
-    final unselectedColor = Theme.of(
-      context,
-    ).colorScheme.onPrimary.withValues(alpha: 0.6);
-    final selectedColor = Theme.of(context).colorScheme.onPrimary;
+    final unselectedColor = colorScheme.onPrimary.withValues(alpha: 0.6);
+    final selectedColor = colorScheme.onPrimary;
 
     return InkWell(
       onTap: () => onItemSelected(index),
@@ -75,7 +89,7 @@ class BlackboardSidebar extends StatelessWidget {
             ),
           ),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+        padding: const .symmetric(vertical: 16.0, horizontal: 20.0),
         child: Row(
           children: [
             Icon(
