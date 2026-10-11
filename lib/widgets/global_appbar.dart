@@ -50,51 +50,49 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return AppBar(
-      leading: leading,
-      title: Text(
-        title,
-        style: const TextStyle(fontFamily: AppFonts.born2B, fontSize: 32),
+  Widget build(BuildContext context) => AppBar(
+    leading: leading,
+    title: Text(
+      title,
+      style: const TextStyle(fontFamily: AppFonts.born2B, fontSize: 32),
+    ),
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    actions: [
+      // Dark Mode Toggle
+      ValueListenableBuilder<ThemeMode>(
+        valueListenable: themeNotifier,
+        builder: (context, currentMode, _) {
+          final colorScheme = Theme.of(context).colorScheme;
+          return IconButton(
+            icon: Icon(
+              currentMode == .light ? Icons.dark_mode : Icons.light_mode,
+              color: colorScheme.primary,
+              size: 28,
+            ),
+            onPressed: () {
+              themeNotifier.value = currentMode == .light ? .dark : .light;
+            },
+          );
+        },
       ),
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      actions: [
-        // Dark Mode Toggle
-        ValueListenableBuilder<ThemeMode>(
-          valueListenable: themeNotifier,
-          builder: (_, currentMode, _) {
-            return IconButton(
-              icon: Icon(
-                currentMode == .light ? Icons.dark_mode : Icons.light_mode,
-                color: colorScheme.primary,
-                size: 28,
-              ),
-              onPressed: () {
-                themeNotifier.value = currentMode == .light ? .dark : .light;
-              },
-            );
-          },
+      const SizedBox(width: 8),
+      IconButton(
+        icon: const CustomInstagramIcon(size: 24),
+        onPressed: () => _openLink(
+          context,
+          "https://www.instagram.com/ruff.patch.project/?hl=en",
         ),
-        const SizedBox(width: 8),
-        IconButton(
-          icon: const CustomInstagramIcon(size: 24),
-          onPressed: () => _openLink(
-            context,
-            "https://www.instagram.com/ruff.patch.project/?hl=en",
-          ),
+      ),
+      const SizedBox(width: 8),
+      IconButton(
+        icon: Icon(Icons.facebook, size: 24),
+        onPressed: () => _openLink(
+          context,
+          "https://www.facebook.com/profile.php?id=61593757455606",
         ),
-        const SizedBox(width: 8),
-        IconButton(
-          icon: Icon(Icons.facebook, size: 24),
-          onPressed: () => _openLink(
-            context,
-            "https://www.facebook.com/profile.php?id=61593757455606",
-          ),
-        ),
-        const SizedBox(width: 24),
-      ],
-    );
-  }
+      ),
+      const SizedBox(width: 24),
+    ],
+  );
 }

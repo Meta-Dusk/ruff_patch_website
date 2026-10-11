@@ -8,10 +8,7 @@ class GoogleLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(size, size),
-      painter: _GoogleLogoPainter(),
-    );
+    return CustomPaint(size: Size(size, size), painter: _GoogleLogoPainter());
   }
 }
 
@@ -56,7 +53,7 @@ class _GoogleLogoPainter extends CustomPainter {
     canvas.drawArc(rect, -math.pi * 1.75, math.pi * 0.5, false, greenPaint);
 
     // Blue: Right arc
-    canvas.drawArc(rect, -math.pi * 0.25, math.pi * 0.35, false, bluePaint);
+    canvas.drawArc(rect, -math.pi * 0.0, math.pi * 0.35, false, bluePaint);
 
     // Blue horizontal crossbar
     final Paint blueBarPaint = Paint()
@@ -75,4 +72,3 @@ class _GoogleLogoPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-

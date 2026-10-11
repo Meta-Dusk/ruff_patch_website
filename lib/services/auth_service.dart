@@ -1,6 +1,7 @@
-import 'package:capstone_website/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:capstone_website/firebase_options.dart';
 
 class AuthService {
   AuthService._();
@@ -8,9 +9,7 @@ class AuthService {
   static FirebaseAuth get _auth => FirebaseAuth.instance;
 
   /// Holds the current Firebase [User], reactive for GoRouter and UI.
-  static final ValueNotifier<User?> userNotifier = ValueNotifier<User?>(
-    null,
-  );
+  static final ValueNotifier<User?> userNotifier = ValueNotifier<User?>(null);
 
   /// Initializes the auth state listener after Firebase is initialized.
   static void initialize() {
@@ -65,4 +64,3 @@ class AuthService {
     await _auth.signOut();
   }
 }
-

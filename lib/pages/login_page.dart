@@ -82,8 +82,8 @@ class _LoginPageState extends State<LoginPage> {
         foregroundColor: colorScheme.onSurface,
         backgroundColor: colorScheme.surface,
         side: BorderSide(color: colorScheme.outlineVariant, width: 1.5),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        shape: RoundedRectangleBorder(borderRadius: .circular(12)),
+        padding: const .symmetric(vertical: 14, horizontal: 16),
       ),
       onPressed: _isLoadingGoogle || _isLoadingGuest
           ? null
@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             )
           : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: .center,
               children: [
                 const GoogleLogo(size: 20),
                 const SizedBox(width: 12),
@@ -106,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                   'Continue with Google',
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: .w600,
                     color: colorScheme.onSurface,
                   ),
                 ),
@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Expanded(child: Divider(color: colorScheme.outlineVariant)),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const .symmetric(horizontal: 16),
           child: Text(
             'or guest access',
             style: TextStyle(
@@ -137,9 +137,9 @@ class _LoginPageState extends State<LoginPage> {
         controller: _usernameController,
         decoration: InputDecoration(
           labelText: "Enter a display name",
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          border: OutlineInputBorder(borderRadius: .circular(12)),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: .circular(12),
             borderSide: BorderSide(color: colorScheme.primary, width: 2),
           ),
         ),
@@ -153,9 +153,7 @@ class _LoginPageState extends State<LoginPage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: colorScheme.primary,
             foregroundColor: colorScheme.onPrimary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: .circular(12)),
           ),
           onPressed: _isLoadingGoogle || _isLoadingGuest
               ? null
@@ -178,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
     ];
 
     final cardContent = [
-      Image.asset(AppAssets.logo, height: 100),
+      Image.asset(AppAssets.pixelLogo, height: 150),
       const SizedBox(height: 20),
       Text(
         'Welcome to Ruff Patch',
@@ -192,17 +190,17 @@ class _LoginPageState extends State<LoginPage> {
       const SizedBox(height: 8),
       Text(
         'e-Learning platform for caring pet owners',
-        textAlign: TextAlign.center,
+        textAlign: .center,
         style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
       ),
       const SizedBox(height: 24),
       if (_errorMessage != null) ...[
         Container(
-          padding: const EdgeInsets.all(12),
-          margin: const EdgeInsets.only(bottom: 16),
+          padding: const .all(12),
+          margin: const .only(bottom: 16),
           decoration: BoxDecoration(
             color: colorScheme.errorContainer,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: .circular(8),
           ),
           child: Row(
             children: [
@@ -234,10 +232,10 @@ class _LoginPageState extends State<LoginPage> {
 
     final card = Card(
       elevation: 8,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      shape: RoundedRectangleBorder(borderRadius: .circular(24)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 36.0),
-        child: Column(mainAxisSize: MainAxisSize.min, children: cardContent),
+        padding: const .symmetric(horizontal: 32.0, vertical: 36.0),
+        child: Column(mainAxisSize: .min, children: cardContent),
       ),
     );
 
@@ -245,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: colorScheme.surface,
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const .all(24.0),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 420),
             child: card,

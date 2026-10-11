@@ -2,11 +2,11 @@ import 'package:capstone_website/core/app_assets.dart';
 import 'package:capstone_website/core/app_fonts.dart';
 import 'package:flutter/material.dart';
 
-class BlackboardSidebar extends StatelessWidget {
+class Sidebar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onItemSelected;
 
-  const BlackboardSidebar({
+  const Sidebar({
     super.key,
     required this.selectedIndex,
     required this.onItemSelected,
@@ -29,13 +29,13 @@ class BlackboardSidebar extends StatelessWidget {
         children: [
           // Header / Logo Area
           Padding(
-            padding: const EdgeInsets.fromLTRB(24, 40, 24, 40),
-            child: Image.asset(AppAssets.logo),
+            padding: const .fromLTRB(24, 40, 24, 40),
+            child: Image.asset(AppAssets.pixelLogo),
           ),
 
           // Navigation Items
           Expanded(
-            child: ListView(padding: EdgeInsets.zero, children: navItems),
+            child: ListView(padding: .zero, children: navItems),
           ),
         ],
       ),

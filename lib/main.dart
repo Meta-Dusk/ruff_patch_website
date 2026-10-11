@@ -11,6 +11,7 @@ void main() async {
   try {
     if (AuthService.isConfigured) {
       await Firebase.initializeApp(
+        name: "Ruff Patch Website",
         options: DefaultFirebaseOptions.currentPlatform,
       );
       AuthService.initialize();
