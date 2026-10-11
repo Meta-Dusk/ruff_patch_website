@@ -47,27 +47,30 @@ class ProgressService {
   static void _listenToFirestore(String uid) {
     try {
       final docRef = FirebaseFirestore.instance.collection('users').doc(uid);
-      _firestoreSubscription = docRef.snapshots().listen((snapshot) {
-        if (!snapshot.exists || snapshot.data() == null) {
-          progressNotifier.value = {};
-          return;
-        }
-
-        final data = snapshot.data()!;
-        final rawProgress = data['progress'] as Map<String, dynamic>? ?? {};
-
-        final Map<String, ChapterProgress> mapped = {};
-        rawProgress.forEach((key, val) {
-          if (val is Map<String, dynamic>) {
-            mapped[key] = ChapterProgress.fromMap(val);
+      _firestoreSubscription = docRef.snapshots().listen(
+        (snapshot) {
+          if (!snapshot.exists || snapshot.data() == null) {
+            progressNotifier.value = {};
+            return;
           }
-        });
 
-        progressNotifier.value = mapped;
-      }, onError: (error) {
-        debugPrint('Firestore progress sync error: $error');
-        _loadFromLocalStorage();
-      });
+          final data = snapshot.data()!;
+          final rawProgress = data['progress'] as Map<String, dynamic>? ?? {};
+
+          final Map<String, ChapterProgress> mapped = {};
+          rawProgress.forEach((key, val) {
+            if (val is Map<String, dynamic>) {
+              mapped[key] = ChapterProgress.fromMap(val);
+            }
+          });
+
+          progressNotifier.value = mapped;
+        },
+        onError: (error) {
+          debugPrint('Firestore progress sync error: $error');
+          _loadFromLocalStorage();
+        },
+      );
     } catch (e) {
       debugPrint('Firestore initialization failed: $e');
       _loadFromLocalStorage();
@@ -79,7 +82,9 @@ class ProgressService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final user = AuthService.currentUser;
-      final key = user?.uid != null ? 'progress_${user!.uid}' : 'guest_progress';
+      final key = user?.uid != null
+          ? 'progress_${user!.uid}'
+          : 'guest_progress';
       final rawJson = prefs.getString(key);
 
       if (rawJson != null) {
@@ -102,8 +107,11 @@ class ProgressService {
 
   /// Automatically marks a chapter as viewed and saves progress.
   static Future<void> markChapterViewed(String chapterId) async {
-    final currentMap = Map<String, ChapterProgress>.from(progressNotifier.value);
-    final existing = currentMap[chapterId] ?? ChapterProgress(chapterId: chapterId);
+    final currentMap = Map<String, ChapterProgress>.from(
+      progressNotifier.value,
+    );
+    final existing =
+        currentMap[chapterId] ?? ChapterProgress(chapterId: chapterId);
 
     // If chapter has no quiz, viewing it marks it completed
     final chapter = Chapter.getChapterById(chapterId);
@@ -127,8 +135,11 @@ class ProgressService {
     int score,
     int total,
   ) async {
-    final currentMap = Map<String, ChapterProgress>.from(progressNotifier.value);
-    final existing = currentMap[chapterId] ?? ChapterProgress(chapterId: chapterId);
+    final currentMap = Map<String, ChapterProgress>.from(
+      progressNotifier.value,
+    );
+    final existing =
+        currentMap[chapterId] ?? ChapterProgress(chapterId: chapterId);
 
     final updated = existing.copyWith(
       hasViewed: true,
@@ -145,23 +156,32 @@ class ProgressService {
   }
 
   /// Persists progress to Firestore (if logged in with Firebase) and local storage.
-  static Future<void> _saveProgress(Map<String, ChapterProgress> progress) async {
+  static Future<void> _saveProgress(
+    Map<String, ChapterProgress> progress,
+  ) async {
     final user = AuthService.currentUser;
 
-    // 1. Always save to local storage (instant cache & guest support)
+    //? Always save to local storage (instant cache & guest support)
     try {
       final prefs = await SharedPreferences.getInstance();
-      final key = user?.uid != null ? 'progress_${user!.uid}' : 'guest_progress';
+      final key = user?.uid != null
+          ? 'progress_${user!.uid}'
+          : 'guest_progress';
       final serialized = progress.map((k, v) => MapEntry(k, v.toMap()));
       await prefs.setString(key, jsonEncode(serialized));
     } catch (e) {
       debugPrint('Local storage save error: $e');
     }
 
-    // 2. If logged in with Firebase, sync to Cloud Firestore
-    if (user != null && !user.isGuest && AuthService.isConfigured && user.uid != null) {
+    //? If logged in with Firebase, sync to Cloud Firestore
+    if (user != null &&
+        !user.isGuest &&
+        AuthService.isConfigured &&
+        user.uid != null) {
       try {
-        final docRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+        final docRef = FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid);
         final serialized = progress.map((k, v) => MapEntry(k, v.toMap()));
 
         await docRef.set({
@@ -178,7 +198,8 @@ class ProgressService {
 
   /// Returns progress for a specific chapter.
   static ChapterProgress getProgress(String chapterId) {
-    return progressNotifier.value[chapterId] ?? ChapterProgress(chapterId: chapterId);
+    return progressNotifier.value[chapterId] ??
+        ChapterProgress(chapterId: chapterId);
   }
 
   /// Total number of chapters.
@@ -206,4 +227,3 @@ class ProgressService {
     return Chapter.allChapters.isNotEmpty ? Chapter.allChapters.first : null;
   }
 }
-

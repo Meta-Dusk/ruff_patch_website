@@ -91,6 +91,45 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
     final isMobile = MediaQuery.sizeOf(context).width < 800;
     final colorScheme = Theme.of(context).colorScheme;
 
+    final themeModeToggle = ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (context, currentMode, _) => IconButton(
+        icon: Icon(
+          currentMode == .light ? Icons.dark_mode : Icons.light_mode,
+          color: colorScheme.primary,
+          size: isMobile ? 24 : 28,
+        ),
+        tooltip: currentMode == .light
+            ? "Switch to dark mode"
+            : "Switch to light mode",
+        onPressed: () {
+          themeNotifier.value = currentMode == .light ? .dark : .light;
+        },
+      ),
+    );
+
+    final instagramLink = IconButton(
+      icon: CustomInstagramIcon(size: isMobile ? 22 : 24),
+      tooltip: "Instagram",
+      onPressed: () => _openLink(
+        context,
+        "https://www.instagram.com/ruff.patch.project/?hl=en",
+      ),
+    );
+
+    final facebookLink = IconButton(
+      icon: Icon(
+        Icons.facebook,
+        size: isMobile ? 24 : 26,
+        color: colorScheme.primary,
+      ),
+      tooltip: "Facebook",
+      onPressed: () => _openLink(
+        context,
+        "https://www.facebook.com/profile.php?id=61593757455606",
+      ),
+    );
+
     return AppBar(
       leading: _buildLeading(context),
       title: Text(
@@ -104,44 +143,11 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       actions: [
         // Dark Mode Toggle
-        ValueListenableBuilder<ThemeMode>(
-          valueListenable: themeNotifier,
-          builder: (context, currentMode, _) => IconButton(
-            icon: Icon(
-              currentMode == .light ? Icons.dark_mode : Icons.light_mode,
-              color: colorScheme.primary,
-              size: isMobile ? 24 : 28,
-            ),
-            tooltip: currentMode == .light
-                ? "Switch to dark mode"
-                : "Switch to light mode",
-            onPressed: () {
-              themeNotifier.value = currentMode == .light ? .dark : .light;
-            },
-          ),
-        ),
+        themeModeToggle,
         SizedBox(width: isMobile ? 4 : 8),
-        IconButton(
-          icon: CustomInstagramIcon(size: isMobile ? 22 : 24),
-          tooltip: "Instagram",
-          onPressed: () => _openLink(
-            context,
-            "https://www.instagram.com/ruff.patch.project/?hl=en",
-          ),
-        ),
+        instagramLink,
         SizedBox(width: isMobile ? 4 : 8),
-        IconButton(
-          icon: Icon(
-            Icons.facebook,
-            size: isMobile ? 22 : 24,
-            color: colorScheme.primary,
-          ),
-          tooltip: "Facebook",
-          onPressed: () => _openLink(
-            context,
-            "https://www.facebook.com/profile.php?id=61593757455606",
-          ),
-        ),
+        facebookLink,
         SizedBox(width: isMobile ? 12 : 24),
       ],
     );

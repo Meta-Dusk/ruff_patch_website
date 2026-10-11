@@ -47,26 +47,81 @@ class ChapterCard extends StatelessWidget {
       onTap: () => context.go(AppRoutes.chapterPath(chapter.id)),
       child: ValueListenableBuilder<Map<String, ChapterProgress>>(
         valueListenable: ProgressService.progressNotifier,
-        builder: (context, progressMap, _) {
+        builder: (_, progressMap, _) {
           final progress =
-              progressMap[chapter.id] ??
-              ChapterProgress(chapterId: chapter.id);
-          return _chapterCardContent(context, chapter, progress);
+              progressMap[chapter.id] ?? ChapterProgress(chapterId: chapter.id);
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _ChapterCardTopBanner(chapter: chapter, progress: progress),
+              _ChapterCardBottomContent(chapter: chapter, progress: progress),
+            ],
+          );
         },
       ),
     ),
   );
+}
 
-  Widget _chapterCardContent(
-    BuildContext context,
-    Chapter chapter,
-    ChapterProgress progress,
-  ) {
+class _ChapterCardTopBanner extends StatelessWidget {
+  final Chapter chapter;
+  final ChapterProgress progress;
+
+  const _ChapterCardTopBanner({required this.chapter, required this.progress});
+
+  @override
+  Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    Widget? statusBadge;
+    return Expanded(
+      flex: 3,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: .topLeft,
+            end: .bottomRight,
+            colors: [
+              colorScheme.primary.withValues(alpha: 0.7),
+              colorScheme.primary,
+            ],
+          ),
+        ),
+        child: Stack(
+          alignment: .center,
+          children: [
+            Positioned(
+              right: -20,
+              bottom: -20,
+              child: Icon(
+                chapter.icon,
+                size: 120,
+                color: colorScheme.onPrimary.withValues(alpha: 0.15),
+              ),
+            ),
+            Icon(chapter.icon, size: 64, color: colorScheme.onPrimary),
+            if (progress.isCompleted || progress.hasViewed)
+              Positioned(
+                top: 12,
+                left: 12,
+                child: _ChapterStatusBadge(progress: progress),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ChapterStatusBadge extends StatelessWidget {
+  final ChapterProgress progress;
+
+  const _ChapterStatusBadge({required this.progress});
+
+  @override
+  Widget build(BuildContext context) {
     if (progress.isCompleted) {
-      statusBadge = Container(
+      return Container(
         padding: const .symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.green.shade600,
@@ -96,78 +151,48 @@ class ChapterCard extends StatelessWidget {
           ],
         ),
       );
-    } else if (progress.hasViewed) {
-      statusBadge = Container(
-        padding: const .symmetric(horizontal: 10, vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.amber.shade800,
-          borderRadius: .circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 4,
-            ),
-          ],
-        ),
-        child: const Row(
-          mainAxisSize: .min,
-          children: [
-            Icon(Icons.play_circle_outline, size: 14, color: Colors.white),
-            SizedBox(width: 4),
-            Text(
-              'In Progress',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontFamily: AppFonts.born2B,
-              ),
-            ),
-          ],
-        ),
-      );
     }
 
-    final topBanner = Expanded(
-      flex: 3,
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: .topLeft,
-            end: .bottomRight,
-            colors: [
-              colorScheme.primary.withValues(alpha: 0.7),
-              colorScheme.primary,
-            ],
-          ),
-        ),
-        child: Stack(
-          alignment: .center,
-          children: [
-            // Background watermark icon
-            Positioned(
-              right: -20,
-              bottom: -20,
-              child: Icon(
-                chapter.icon,
-                size: 120,
-                color: colorScheme.onPrimary.withValues(alpha: 0.15),
-              ),
+    return Container(
+      padding: const .symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.amber.shade800,
+        borderRadius: .circular(20),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 4),
+        ],
+      ),
+      child: const Row(
+        mainAxisSize: .min,
+        children: [
+          Icon(Icons.play_circle_outline, size: 14, color: Colors.white),
+          SizedBox(width: 4),
+          Text(
+            'In Progress',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontFamily: AppFonts.born2B,
             ),
-            // Main focused icon
-            Icon(chapter.icon, size: 64, color: colorScheme.onPrimary),
-            // Progress Status Badge
-            if (statusBadge != null)
-              Positioned(
-                top: 12,
-                left: 12,
-                child: statusBadge,
-              ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+}
 
-    final footerDetails = Row(
+class _ChapterCardBottomContent extends StatelessWidget {
+  final Chapter chapter;
+  final ChapterProgress progress;
+
+  const _ChapterCardBottomContent({
+    required this.chapter,
+    required this.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final footer = Row(
       mainAxisAlignment: .spaceBetween,
       children: [
         _Badge(icon: Icons.schedule, label: chapter.duration),
@@ -182,49 +207,45 @@ class ChapterCard extends StatelessWidget {
       ],
     );
 
-    final bottomContent = Expanded(
+    final chapterTitle = Text(
+      chapter.title,
+      style: const TextStyle(
+        fontSize: 20,
+        fontFamily: AppFonts.born2B,
+        height: 1.2,
+      ),
+      maxLines: 2,
+      overflow: .ellipsis,
+    );
+
+    final chapterDescription = Expanded(
+      child: Text(
+        chapter.description,
+        style: TextStyle(
+          fontSize: 16,
+          fontFamily: AppFonts.born2B,
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+        maxLines: 2,
+        overflow: .ellipsis,
+      ),
+    );
+
+    return Expanded(
       flex: 4,
       child: Padding(
         padding: const .all(20.0),
         child: Column(
           crossAxisAlignment: .start,
           children: [
-            Text(
-              chapter.title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontFamily: AppFonts.born2B,
-                height: 1.2,
-              ),
-              maxLines: 2,
-              overflow: .ellipsis,
-            ),
+            chapterTitle,
             const SizedBox(height: 8),
-            Expanded(
-              child: Text(
-                chapter.description,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: AppFonts.born2B,
-                  color: colorScheme.secondary,
-                ),
-                maxLines: 2,
-                overflow: .ellipsis,
-              ),
-            ),
+            chapterDescription,
             const Divider(height: 24),
-            footerDetails,
+            footer,
           ],
         ),
       ),
-    );
-
-    return Column(
-      crossAxisAlignment: .stretch,
-      children: [
-        topBanner,
-        bottomContent,
-      ],
     );
   }
 }

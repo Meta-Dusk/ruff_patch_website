@@ -23,73 +23,18 @@ class Sidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
+    final header = isCollapsed
+        ? _CollapsedSidebarHeader(onToggleCollapse: onToggleCollapse)
+        : isDrawer
+        ? const _DrawerSidebarHeader()
+        : _ExpandedSidebarHeader(onToggleCollapse: onToggleCollapse);
+
     final navItems = [
       _buildNavItem(icon: Icons.house, title: "Home", index: 0),
       _buildNavItem(icon: Icons.library_books, title: "Modules", index: 1),
       _buildNavItem(icon: Icons.book, title: "Resources", index: 2),
       _buildNavItem(icon: Icons.dashboard, title: "Dashboard", index: 3),
     ];
-
-    Widget header;
-    if (isCollapsed) {
-      header = Padding(
-        padding: const .symmetric(vertical: 20),
-        child: Column(
-          children: [
-            Image.asset(
-              AppAssets.pixelLogo,
-              height: 32,
-              fit: .contain,
-              alignment: .center,
-            ),
-            if (onToggleCollapse != null) ...[
-              const SizedBox(height: 12),
-              IconButton(
-                icon: const Icon(Icons.chevron_right),
-                color: colorScheme.onPrimary,
-                tooltip: "Expand sidebar",
-                onPressed: onToggleCollapse,
-                alignment: .center,
-              ),
-            ],
-          ],
-        ),
-      );
-    } else if (isDrawer) {
-      header = Padding(
-        padding: const .fromLTRB(24, 24, 16, 24),
-        child: Row(
-          mainAxisAlignment: .spaceBetween,
-          children: [
-            Expanded(child: Image.asset(AppAssets.pixelLogo, fit: .contain)),
-            IconButton(
-              icon: const Icon(Icons.close),
-              color: colorScheme.onPrimary,
-              tooltip: "Close menu",
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
-    } else {
-      header = Padding(
-        padding: const .fromLTRB(24, 32, 16, 32),
-        child: Row(
-          children: [
-            Expanded(child: Image.asset(AppAssets.pixelLogo, fit: .contain)),
-            if (onToggleCollapse != null)
-              IconButton(
-                icon: Icon(
-                  Icons.chevron_left,
-                  color: colorScheme.onPrimary.withValues(alpha: 0.8),
-                ),
-                tooltip: "Collapse sidebar",
-                onPressed: onToggleCollapse,
-              ),
-          ],
-        ),
-      );
-    }
 
     return Container(
       color: colorScheme.primary,
@@ -109,7 +54,7 @@ class Sidebar extends StatelessWidget {
     required IconData icon,
     required String title,
     required int index,
-  }) => _NavItem(
+  }) => NavItem(
     icon: icon,
     title: title,
     index: index,
@@ -119,7 +64,86 @@ class Sidebar extends StatelessWidget {
   );
 }
 
-class _NavItem extends StatelessWidget {
+class _CollapsedSidebarHeader extends StatelessWidget {
+  final VoidCallback? onToggleCollapse;
+
+  const _CollapsedSidebarHeader({this.onToggleCollapse});
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const .symmetric(vertical: 20),
+    child: Column(
+      children: [
+        Image.asset(
+          AppAssets.pixelLogo,
+          height: 32,
+          fit: .contain,
+          alignment: .center,
+        ),
+        if (onToggleCollapse != null) ...[
+          const SizedBox(height: 12),
+          IconButton(
+            icon: const Icon(Icons.chevron_right),
+            color: Theme.of(context).colorScheme.onPrimary,
+            tooltip: "Expand sidebar",
+            onPressed: onToggleCollapse,
+            alignment: .center,
+          ),
+        ],
+      ],
+    ),
+  );
+}
+
+class _DrawerSidebarHeader extends StatelessWidget {
+  const _DrawerSidebarHeader();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const .fromLTRB(24, 24, 16, 24),
+    child: Row(
+      mainAxisAlignment: .spaceBetween,
+      children: [
+        Expanded(child: Image.asset(AppAssets.pixelLogo, fit: .contain)),
+        IconButton(
+          icon: const Icon(Icons.close),
+          color: Theme.of(context).colorScheme.onPrimary,
+          tooltip: "Close menu",
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ],
+    ),
+  );
+}
+
+class _ExpandedSidebarHeader extends StatelessWidget {
+  final VoidCallback? onToggleCollapse;
+
+  const _ExpandedSidebarHeader({this.onToggleCollapse});
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const .fromLTRB(24, 32, 16, 32),
+    child: Row(
+      children: [
+        Expanded(child: Image.asset(AppAssets.pixelLogo, fit: .contain)),
+        if (onToggleCollapse != null)
+          IconButton(
+            icon: Icon(
+              Icons.chevron_left,
+              color: Theme.of(
+                context,
+              ).colorScheme.onPrimary.withValues(alpha: 0.8),
+            ),
+            tooltip: "Collapse sidebar",
+            onPressed: onToggleCollapse,
+          ),
+      ],
+    ),
+  );
+}
+
+class NavItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final int index;
@@ -127,7 +151,8 @@ class _NavItem extends StatelessWidget {
   final ValueChanged<int> onItemSelected;
   final bool isCollapsed;
 
-  const _NavItem({
+  const NavItem({
+    super.key,
     required this.icon,
     required this.title,
     required this.index,
