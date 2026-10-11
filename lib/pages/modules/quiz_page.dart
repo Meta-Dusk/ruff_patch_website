@@ -1,9 +1,11 @@
-import 'package:capstone_website/core/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:capstone_website/core/app_fonts.dart';
+import 'package:capstone_website/core/app_routes.dart';
 import 'package:capstone_website/models/chapter.dart';
 import 'package:capstone_website/models/quiz.dart';
+import 'package:capstone_website/services/progress_service.dart';
 
 class QuizPage extends StatefulWidget {
   final String chapterId;
@@ -28,7 +30,6 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void _submitAnswer() {
-    // Don't allow submission without an answer
     if (_selectedOptionIndex == null) return;
 
     final currentQuestion = _chapter!.quiz!.questions[_currentQuestionIndex];
@@ -40,12 +41,19 @@ class _QuizPageState extends State<QuizPage> {
     if (_currentQuestionIndex < _chapter!.quiz!.questions.length - 1) {
       setState(() {
         _currentQuestionIndex++;
-        _selectedOptionIndex = null; // Reset selection for the next question
+        _selectedOptionIndex = null;
       });
     } else {
       setState(() {
         _isFinished = true;
       });
+
+      // Automatically persist quiz results
+      ProgressService.saveQuizResult(
+        widget.chapterId,
+        _score,
+        _chapter!.quiz!.questions.length,
+      );
     }
   }
 
@@ -141,7 +149,11 @@ class _QuizPageState extends State<QuizPage> {
       children: [
         Text(
           'Question ${_currentQuestionIndex + 1} of ${quiz.questions.length}',
-          style: const TextStyle(fontSize: 18, color: Colors.black54),
+          style: TextStyle(
+            fontSize: 18,
+            color: colorScheme.onSurfaceVariant,
+            fontFamily: AppFonts.born2B,
+          ),
         ),
         const SizedBox(height: 16),
         Text(
@@ -178,6 +190,8 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   Widget _buildResultsView() {
+    final colorScheme = Theme.of(context).colorScheme;
+
     final children = [
       const Icon(Icons.emoji_events, size: 100, color: Colors.amber),
       const SizedBox(height: 24),
@@ -186,7 +200,7 @@ class _QuizPageState extends State<QuizPage> {
         style: TextStyle(
           fontSize: 36,
           fontFamily: AppFonts.born2B,
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
         ),
       ),
       const SizedBox(height: 16),
@@ -197,12 +211,37 @@ class _QuizPageState extends State<QuizPage> {
           fontFamily: AppFonts.liberationSans,
         ),
       ),
-      const SizedBox(height: 40),
+      const SizedBox(height: 16),
+      Container(
+        padding: const .symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.green.withValues(alpha: 0.1),
+          borderRadius: .circular(20),
+          border: .all(color: Colors.green.shade600),
+        ),
+        child: Row(
+          mainAxisSize: .min,
+          children: [
+            Icon(Icons.cloud_done, size: 18, color: Colors.green.shade600),
+            const SizedBox(width: 8),
+            Text(
+              'Progress Auto-Saved',
+              style: TextStyle(
+                fontFamily: AppFonts.born2B,
+                fontSize: 16,
+                color: Colors.green.shade700,
+              ),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 32),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Colors.white,
+          backgroundColor: colorScheme.primary,
+          foregroundColor: colorScheme.onPrimary,
           padding: const .symmetric(horizontal: 40, vertical: 20),
+          shape: RoundedRectangleBorder(borderRadius: .circular(12)),
         ),
         onPressed: () => context.go(AppRoutes.chapterPath(widget.chapterId)),
         child: const Text(

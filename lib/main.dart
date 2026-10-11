@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:capstone_website/app.dart';
 import 'package:capstone_website/firebase_options.dart';
 import 'package:capstone_website/services/auth_service.dart';
+import 'package:capstone_website/services/progress_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,8 @@ void main() async {
   } catch (e) {
     debugPrint('Firebase initialization error: $e');
   }
+
+  ProgressService.initialize();
 
   runApp(const MainApp());
 }

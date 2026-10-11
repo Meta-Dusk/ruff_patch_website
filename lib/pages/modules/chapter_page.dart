@@ -1,9 +1,12 @@
-import 'package:capstone_website/core/app_routes.dart';
-import 'package:capstone_website/models/chapter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:capstone_website/core/app_fonts.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+
+import 'package:capstone_website/core/app_fonts.dart';
+import 'package:capstone_website/core/app_routes.dart';
+import 'package:capstone_website/models/chapter.dart';
+import 'package:capstone_website/models/chapter_progress.dart';
+import 'package:capstone_website/services/progress_service.dart';
 
 class ChapterPage extends StatefulWidget {
   final String chapterId;
@@ -36,6 +39,11 @@ class _ChapterPageState extends State<ChapterPage> {
         mute: false,
       ),
     );
+
+    // Auto-mark chapter as viewed
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ProgressService.markChapterViewed(widget.chapterId);
+    });
   }
 
   @override
@@ -73,57 +81,75 @@ class _ChapterPageState extends State<ChapterPage> {
       ),
     );
 
-    final quizSection = Container(
-      padding: const .all(32),
-      decoration: BoxDecoration(
-        color: colorScheme.primary.withValues(alpha: 0.1),
-        borderRadius: .circular(16),
-        border: .all(color: colorScheme.primary),
-      ),
-      child: Column(
-        children: [
-          const Text(
-            'Ready to test your knowledge?',
-            style: TextStyle(
-              fontSize: 24,
-              fontFamily: AppFonts.born2B,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.surfaceContainer,
-              padding: const .symmetric(horizontal: 32, vertical: 20),
-              textStyle: const TextStyle(
-                fontSize: 18,
-                fontFamily: AppFonts.born2B,
-              ),
-            ),
-            icon: const Icon(Icons.quiz),
-            label: const Text('Start Quiz'),
-            onPressed: () {
-              context.go(AppRoutes.quizPath(widget.chapterId));
-            },
-          ),
-        ],
-      ),
-    );
+    Widget buildQuizSection(ChapterProgress progress) {
+      final hasCompletedQuiz = progress.quizScore != null;
 
-    final constrainedBox = ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxWidth: 900,
-      ), // Keep content from stretching too wide on a desktop monitor
-      child: ListView(
-        padding: const .all(24.0),
-        children: [
-          youtubeVideoWidget,
-          const SizedBox(height: 40),
-          if (_currentChapter!.quiz != null) quizSection,
-        ],
-      ),
-    );
+      return Container(
+        padding: const .all(32),
+        decoration: BoxDecoration(
+          color: hasCompletedQuiz
+              ? Colors.green.withValues(alpha: 0.08)
+              : colorScheme.primary.withValues(alpha: 0.1),
+          borderRadius: .circular(16),
+          border: .all(
+            color: hasCompletedQuiz
+                ? Colors.green.shade600
+                : colorScheme.primary,
+          ),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: .center,
+              children: [
+                Icon(
+                  hasCompletedQuiz
+                      ? Icons.check_circle
+                      : Icons.quiz_outlined,
+                  color: hasCompletedQuiz
+                      ? Colors.green.shade600
+                      : colorScheme.primary,
+                  size: 28,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  hasCompletedQuiz
+                      ? 'Quiz Passed! (${progress.quizScore}/${progress.quizTotal})'
+                      : 'Ready to test your knowledge?',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontFamily: AppFonts.born2B,
+                    fontWeight: .bold,
+                    color: hasCompletedQuiz
+                        ? Colors.green.shade700
+                        : colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: hasCompletedQuiz
+                    ? Colors.green.shade700
+                    : colorScheme.primary,
+                foregroundColor: Colors.white,
+                padding: const .symmetric(horizontal: 32, vertical: 18),
+                textStyle: const TextStyle(
+                  fontSize: 18,
+                  fontFamily: AppFonts.born2B,
+                ),
+              ),
+              icon: Icon(hasCompletedQuiz ? Icons.replay : Icons.quiz),
+              label: Text(hasCompletedQuiz ? 'Retake Quiz' : 'Start Quiz'),
+              onPressed: () {
+                context.go(AppRoutes.quizPath(widget.chapterId));
+              },
+            ),
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -138,8 +164,62 @@ class _ChapterPageState extends State<ChapterPage> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          ValueListenableBuilder<Map<String, ChapterProgress>>(
+            valueListenable: ProgressService.progressNotifier,
+            builder: (_, progressMap, _) {
+              final progress =
+                  progressMap[widget.chapterId] ??
+                  ChapterProgress(chapterId: widget.chapterId);
+
+              if (progress.isCompleted) {
+                return Padding(
+                  padding: const .only(right: 24.0),
+                  child: Chip(
+                    avatar: const Icon(
+                      Icons.check_circle,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                    label: const Text(
+                      'Completed',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: AppFonts.born2B,
+                      ),
+                    ),
+                    backgroundColor: Colors.green.shade600,
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
       ),
-      body: Center(child: constrainedBox),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 900),
+          child: ValueListenableBuilder<Map<String, ChapterProgress>>(
+            valueListenable: ProgressService.progressNotifier,
+            builder: (_, progressMap, _) {
+              final progress =
+                  progressMap[widget.chapterId] ??
+                  ChapterProgress(chapterId: widget.chapterId);
+
+              return ListView(
+                padding: const .all(24.0),
+                children: [
+                  youtubeVideoWidget,
+                  const SizedBox(height: 32),
+                  if (_currentChapter!.quiz != null)
+                    buildQuizSection(progress),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }

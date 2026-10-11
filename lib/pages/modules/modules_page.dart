@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:capstone_website/widgets/global_appbar.dart';
 import 'package:capstone_website/core/app_fonts.dart';
 import 'package:capstone_website/core/app_routes.dart';
 import 'package:capstone_website/models/chapter.dart';
+import 'package:capstone_website/models/chapter_progress.dart';
+import 'package:capstone_website/services/progress_service.dart';
+import 'package:capstone_website/widgets/global_appbar.dart';
 
 class ModulesPage extends StatelessWidget {
   const ModulesPage({super.key});
@@ -24,7 +26,7 @@ class ModulesPage extends StatelessWidget {
         ),
         itemCount: Chapter.allChapters.length,
         itemBuilder: (_, index) {
-          return ChapterCard(chapter: .allChapters[index]);
+          return ChapterCard(chapter: Chapter.allChapters[index]);
         },
       ),
     ),
@@ -43,12 +45,88 @@ class ChapterCard extends StatelessWidget {
     shape: RoundedRectangleBorder(borderRadius: .circular(16)),
     child: InkWell(
       onTap: () => context.go(AppRoutes.chapterPath(chapter.id)),
-      child: _chapterCardContent(context, chapter),
+      child: ValueListenableBuilder<Map<String, ChapterProgress>>(
+        valueListenable: ProgressService.progressNotifier,
+        builder: (context, progressMap, _) {
+          final progress =
+              progressMap[chapter.id] ??
+              ChapterProgress(chapterId: chapter.id);
+          return _chapterCardContent(context, chapter, progress);
+        },
+      ),
     ),
   );
 
-  Widget _chapterCardContent(BuildContext context, Chapter chapter) {
+  Widget _chapterCardContent(
+    BuildContext context,
+    Chapter chapter,
+    ChapterProgress progress,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
+
+    Widget? statusBadge;
+    if (progress.isCompleted) {
+      statusBadge = Container(
+        padding: const .symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.green.shade600,
+          borderRadius: .circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              blurRadius: 4,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: .min,
+          children: [
+            const Icon(Icons.check_circle, size: 14, color: Colors.white),
+            const SizedBox(width: 4),
+            Text(
+              progress.quizScore != null
+                  ? 'Completed (${progress.quizScore}/${progress.quizTotal})'
+                  : 'Completed',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontFamily: AppFonts.born2B,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (progress.hasViewed) {
+      statusBadge = Container(
+        padding: const .symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.amber.shade800,
+          borderRadius: .circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              blurRadius: 4,
+            ),
+          ],
+        ),
+        child: const Row(
+          mainAxisSize: .min,
+          children: [
+            Icon(Icons.play_circle_outline, size: 14, color: Colors.white),
+            SizedBox(width: 4),
+            Text(
+              'In Progress',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontFamily: AppFonts.born2B,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     final topBanner = Expanded(
       flex: 3,
       child: Container(
@@ -77,6 +155,13 @@ class ChapterCard extends StatelessWidget {
             ),
             // Main focused icon
             Icon(chapter.icon, size: 64, color: colorScheme.onPrimary),
+            // Progress Status Badge
+            if (statusBadge != null)
+              Positioned(
+                top: 12,
+                left: 12,
+                child: statusBadge,
+              ),
           ],
         ),
       ),
@@ -86,8 +171,14 @@ class ChapterCard extends StatelessWidget {
       mainAxisAlignment: .spaceBetween,
       children: [
         _Badge(icon: Icons.schedule, label: chapter.duration),
-        if (chapter.quiz != null)
-          _Badge(icon: Icons.quiz_outlined, label: 'Includes Quiz'),
+        if (progress.isCompleted)
+          _Badge(
+            icon: Icons.check_circle_outline,
+            label: 'Done',
+            color: Colors.green.shade600,
+          )
+        else if (chapter.quiz != null)
+          const _Badge(icon: Icons.quiz_outlined, label: 'Includes Quiz'),
       ],
     );
 
@@ -115,7 +206,7 @@ class ChapterCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontFamily: AppFonts.born2B,
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: colorScheme.secondary,
                 ),
                 maxLines: 2,
                 overflow: .ellipsis,
@@ -131,8 +222,8 @@ class ChapterCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        topBanner, // Colored Header
-        bottomContent, // Text and Data
+        topBanner,
+        bottomContent,
       ],
     );
   }
@@ -141,12 +232,13 @@ class ChapterCard extends StatelessWidget {
 class _Badge extends StatelessWidget {
   final IconData icon;
   final String label;
+  final Color? color;
 
-  const _Badge({required this.icon, required this.label});
+  const _Badge({required this.icon, required this.label, this.color});
 
   @override
   Widget build(BuildContext context) {
-    final badgeColor = Theme.of(context).colorScheme.primary;
+    final badgeColor = color ?? Theme.of(context).colorScheme.primary;
     return Row(
       children: [
         Icon(icon, size: 16, color: badgeColor),
