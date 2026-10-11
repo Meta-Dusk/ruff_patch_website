@@ -1,7 +1,6 @@
 import 'package:capstone_website/app.dart';
 import 'package:capstone_website/core/app_fonts.dart';
 import 'package:capstone_website/widgets/custom_instagram_icon.dart';
-import 'package:capstone_website/widgets/custom_youtube_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -80,28 +79,18 @@ class GlobalAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         const SizedBox(width: 8),
         IconButton(
-          icon: Text(
-            "𝕏",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: .bold,
-              color: colorScheme.primary,
-            ),
-          ),
-          onPressed: () => _openLink(context, "https://x.com/JhonAndreDC"),
-        ),
-        const SizedBox(width: 8),
-        IconButton(
           icon: const CustomInstagramIcon(size: 24),
-          onPressed: () =>
-              _openLink(context, "https://www.instagram.com/rgielsmam/"),
-        ),
-        const SizedBox(width: 8),
-        IconButton(
-          icon: const CustomYoutubeIcon(size: 28),
           onPressed: () => _openLink(
             context,
-            "https://www.youtube.com/@Anarky_The_Mercenary",
+            "https://www.instagram.com/ruff.patch.project/?hl=en",
+          ),
+        ),
+        const SizedBox(width: 8),
+        IconButton(
+          icon: Icon(Icons.facebook, size: 24),
+          onPressed: () => _openLink(
+            context,
+            "https://www.facebook.com/profile.php?id=61593757455606",
           ),
         ),
         const SizedBox(width: 24),
