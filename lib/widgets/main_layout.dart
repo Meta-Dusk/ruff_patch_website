@@ -1,7 +1,9 @@
-import 'package:capstone_website/app.dart';
-import 'package:capstone_website/core/app_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:capstone_website/core/app_fonts.dart';
+import 'package:capstone_website/services/auth_service.dart';
 import 'blackboard_sidebar.dart';
 
 class MainLayout extends StatelessWidget {
@@ -12,10 +14,11 @@ class MainLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final userProfile = ValueListenableBuilder<String?>(
-      valueListenable: userNotifier,
-      builder: (_, username, _) {
-        final name = username ?? "Guest";
+    final userProfile = ValueListenableBuilder<User?>(
+      valueListenable: AuthService.userNotifier,
+      builder: (_, user, _) {
+        final name = user?.displayName ?? user?.email ?? "Guest";
+        final photoUrl = user?.photoURL;
         final colorScheme = Theme.of(context).colorScheme;
 
         return ListTile(
@@ -26,14 +29,22 @@ class MainLayout extends StatelessWidget {
           leading: CircleAvatar(
             backgroundColor: colorScheme.onPrimary,
             foregroundColor: colorScheme.primary,
-            child: Text(
-              name.isNotEmpty ? name[0].toUpperCase() : "?",
-              style: const TextStyle(fontFamily: AppFonts.born2B, fontSize: 24),
-              textAlign: .center,
-            ),
+            backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+            child: photoUrl == null
+                ? Text(
+                    name.isNotEmpty ? name[0].toUpperCase() : "?",
+                    style: const TextStyle(
+                      fontFamily: AppFonts.born2B,
+                      fontSize: 24,
+                    ),
+                    textAlign: TextAlign.center,
+                  )
+                : null,
           ),
           title: Text(
             name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: colorScheme.onPrimary,
               fontFamily: AppFonts.born2B,
@@ -41,7 +52,7 @@ class MainLayout extends StatelessWidget {
             ),
           ),
           trailing: IconButton(
-            onPressed: () => userNotifier.value = null,
+            onPressed: () => AuthService.signOut(),
             icon: Icon(
               Icons.logout,
               color: Theme.of(

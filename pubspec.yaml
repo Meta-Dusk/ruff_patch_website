@@ -1,12 +1,14 @@
 name: capstone_website
 description: "An e-Learning Website for Dog Owners."
 publish_to: "none"
-version: 0.1.0+1
+version: 0.1.1+1
 
 environment:
     sdk: ^3.11.3
 
 dependencies:
+    firebase_auth: ^6.7.0
+    firebase_core: ^4.15.0
     flutter:
         sdk: flutter
     go_router: ^18.0.2
