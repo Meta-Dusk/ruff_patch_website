@@ -1,8 +1,8 @@
-import 'package:capstone_website/core/app_router.dart';
 import 'package:flutter/material.dart';
 
+import 'package:capstone_website/core/app_router.dart';
+
 final themeNotifier = ValueNotifier(ThemeMode.light);
-final userNotifier = ValueNotifier<String?>(null);
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});

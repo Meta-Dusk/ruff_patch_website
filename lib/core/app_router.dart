@@ -1,4 +1,6 @@
-import 'package:capstone_website/app.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:capstone_website/core/app_routes.dart';
 import 'package:capstone_website/pages/dashboard_page.dart';
 import 'package:capstone_website/pages/home_page.dart';
@@ -7,9 +9,8 @@ import 'package:capstone_website/pages/modules/chapter_page.dart';
 import 'package:capstone_website/pages/modules/modules_page.dart';
 import 'package:capstone_website/pages/modules/quiz_page.dart';
 import 'package:capstone_website/pages/resources_page.dart';
+import 'package:capstone_website/services/auth_service.dart';
 import 'package:capstone_website/widgets/main_layout.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
@@ -70,9 +71,9 @@ final branches = [
 final goRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: AppRoutes.login,
-  refreshListenable: userNotifier,
+  refreshListenable: AuthService.userNotifier,
   redirect: (context, state) {
-    final isLoggedIn = userNotifier.value != null;
+    final isLoggedIn = AuthService.userNotifier.value != null;
     final isGoingToLogin = state.matchedLocation == AppRoutes.login;
 
     if (!isLoggedIn && !isGoingToLogin) return AppRoutes.login;
