@@ -16,7 +16,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   bool _isLoadingGoogle = false;
-  bool _isLoadingGuest = false;
   String? _errorMessage;
 
   Future<void> _handleGoogleSignIn() async {
@@ -42,30 +41,15 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _handleGuestLogin() async {
+  void _handleGuestLogin() {
     final username = _usernameController.text.trim();
     if (username.isEmpty) return;
 
     setState(() {
-      _isLoadingGuest = true;
       _errorMessage = null;
     });
 
-    try {
-      await AuthService.signInAnonymously(displayName: username);
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorMessage = e.toString().replaceFirst('Exception: ', '');
-        });
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingGuest = false;
-        });
-      }
-    }
+    AuthService.signInAsGuest(username);
   }
 
   @override
@@ -86,9 +70,7 @@ class _LoginPageState extends State<LoginPage> {
         shape: RoundedRectangleBorder(borderRadius: .circular(12)),
         padding: const .symmetric(vertical: 14, horizontal: 16),
       ),
-      onPressed: _isLoadingGoogle || _isLoadingGuest
-          ? null
-          : _handleGoogleSignIn,
+      onPressed: _isLoadingGoogle ? null : _handleGoogleSignIn,
       child: _isLoadingGoogle
           ? SizedBox(
               height: 22,
@@ -156,22 +138,11 @@ class _LoginPageState extends State<LoginPage> {
             foregroundColor: colorScheme.onPrimary,
             shape: RoundedRectangleBorder(borderRadius: .circular(12)),
           ),
-          onPressed: _isLoadingGoogle || _isLoadingGuest
-              ? null
-              : _handleGuestLogin,
-          child: _isLoadingGuest
-              ? SizedBox(
-                  height: 22,
-                  width: 22,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    color: colorScheme.onPrimary,
-                  ),
-                )
-              : const Text(
-                  'Enter as Guest',
-                  style: TextStyle(fontSize: 18, fontFamily: AppFonts.born2B),
-                ),
+          onPressed: _isLoadingGoogle ? null : _handleGuestLogin,
+          child: const Text(
+            'Enter as Guest',
+            style: TextStyle(fontSize: 18, fontFamily: AppFonts.born2B),
+          ),
         ),
       ),
     ];

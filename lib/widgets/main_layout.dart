@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:capstone_website/core/app_fonts.dart';
+import 'package:capstone_website/models/app_user.dart';
 import 'package:capstone_website/services/auth_service.dart';
 import 'sidebar.dart';
 
@@ -64,11 +64,11 @@ class _UserProfile extends StatelessWidget {
   const _UserProfile({this.isCollapsed = false});
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<User?>(
+  Widget build(BuildContext context) => ValueListenableBuilder<AppUser?>(
     valueListenable: AuthService.userNotifier,
     builder: (_, user, _) {
-      final name = user?.displayName ?? user?.email ?? "Guest";
-      final photoUrl = user?.photoURL;
+      final name = user?.displayName ?? "Guest";
+      final photoUrl = user?.photoUrl;
       final colorScheme = Theme.of(context).colorScheme;
 
       final avatarText = Text(
@@ -105,26 +105,33 @@ class _UserProfile extends StatelessWidget {
         );
       }
 
-      return ListTile(
-        contentPadding: const .symmetric(horizontal: 24, vertical: 8),
-        leading: avatar,
-        title: Text(
-          name,
-          maxLines: 1,
-          overflow: .ellipsis,
-          style: TextStyle(
-            color: colorScheme.onPrimary,
-            fontFamily: AppFonts.born2B,
-            fontSize: 16,
-          ),
-        ),
-        trailing: IconButton(
-          onPressed: () => AuthService.signOut(),
-          icon: Icon(
-            Icons.logout,
-            color: colorScheme.onPrimary.withValues(alpha: 0.7),
-          ),
-          tooltip: "Logout",
+      return Padding(
+        padding: const .symmetric(horizontal: 20, vertical: 8),
+        child: Row(
+          children: [
+            avatar,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                name,
+                maxLines: 1,
+                overflow: .ellipsis,
+                style: TextStyle(
+                  color: colorScheme.onPrimary,
+                  fontFamily: AppFonts.born2B,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            IconButton(
+              onPressed: () => AuthService.signOut(),
+              icon: Icon(
+                Icons.logout,
+                color: colorScheme.onPrimary.withValues(alpha: 0.7),
+              ),
+              tooltip: "Logout",
+            ),
+          ],
         ),
       );
     },
@@ -168,37 +175,49 @@ class _LeftPanel extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final panelWidth = isDrawer ? 280.0 : (isCollapsed ? 72.0 : 260.0);
 
+    final contentWidth = isDrawer ? 280.0 : (isCollapsed ? 72.0 : 260.0);
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOut,
       width: panelWidth,
       color: colorScheme.primary,
-      child: Column(
-        children: [
-          Expanded(
-            child: Sidebar(
-              selectedIndex: navigationShell.currentIndex,
-              isCollapsed: isCollapsed,
-              isDrawer: isDrawer,
-              onToggleCollapse: onToggleCollapse,
-              onItemSelected: (index) {
-                if (isDrawer) {
-                  Navigator.of(context).pop();
-                }
-                navigationShell.goBranch(
-                  index,
-                  initialLocation: index == navigationShell.currentIndex,
-                );
-              },
+      child: ClipRect(
+        child: OverflowBox(
+          alignment: .topLeft,
+          minWidth: 0,
+          maxWidth: contentWidth,
+          child: SizedBox(
+            width: contentWidth,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Sidebar(
+                    selectedIndex: navigationShell.currentIndex,
+                    isCollapsed: isCollapsed,
+                    isDrawer: isDrawer,
+                    onToggleCollapse: onToggleCollapse,
+                    onItemSelected: (index) {
+                      if (isDrawer) {
+                        Navigator.of(context).pop();
+                      }
+                      navigationShell.goBranch(
+                        index,
+                        initialLocation: index == navigationShell.currentIndex,
+                      );
+                    },
+                  ),
+                ),
+                Divider(
+                  height: 1,
+                  color: colorScheme.onPrimary.withValues(alpha: 0.24),
+                ),
+                userProfile,
+                const SizedBox(height: 16),
+              ],
             ),
           ),
-          Divider(
-            height: 1,
-            color: colorScheme.onPrimary.withValues(alpha: 0.24),
-          ),
-          userProfile,
-          const SizedBox(height: 16),
-        ],
+        ),
       ),
     );
   }

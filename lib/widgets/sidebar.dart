@@ -36,7 +36,12 @@ class Sidebar extends StatelessWidget {
         padding: const .symmetric(vertical: 20),
         child: Column(
           children: [
-            Image.asset(AppAssets.pixelLogo, height: 32, fit: .contain),
+            Image.asset(
+              AppAssets.pixelLogo,
+              height: 32,
+              fit: .contain,
+              alignment: .center,
+            ),
             if (onToggleCollapse != null) ...[
               const SizedBox(height: 12),
               IconButton(
@@ -44,6 +49,7 @@ class Sidebar extends StatelessWidget {
                 color: colorScheme.onPrimary,
                 tooltip: "Expand sidebar",
                 onPressed: onToggleCollapse,
+                alignment: .center,
               ),
             ],
           ],
@@ -88,7 +94,7 @@ class Sidebar extends StatelessWidget {
     return Container(
       color: colorScheme.primary,
       child: Column(
-        crossAxisAlignment: .start,
+        crossAxisAlignment: .center,
         children: [
           header,
           Expanded(
@@ -178,13 +184,17 @@ class _NavItem extends StatelessWidget {
               size: 24,
             ),
             const SizedBox(width: 16),
-            Text(
-              title,
-              style: TextStyle(
-                color: isSelected ? selectedColor : unselectedColor,
-                fontSize: 24,
-                fontWeight: .normal,
-                fontFamily: AppFonts.born2B,
+            Expanded(
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: .ellipsis,
+                style: TextStyle(
+                  color: isSelected ? selectedColor : unselectedColor,
+                  fontSize: 24,
+                  fontWeight: .normal,
+                  fontFamily: AppFonts.born2B,
+                ),
               ),
             ),
           ],
