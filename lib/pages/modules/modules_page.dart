@@ -1,6 +1,7 @@
-import 'package:capstone_website/widgets/global_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:capstone_website/widgets/global_appbar.dart';
 import 'package:capstone_website/core/app_fonts.dart';
 import 'package:capstone_website/core/app_routes.dart';
 import 'package:capstone_website/models/chapter.dart';
@@ -11,7 +12,7 @@ class ModulesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: Colors.transparent,
-    appBar: GlobalAppBar(title: "Modules"),
+    appBar: const GlobalAppBar(title: "Modules"),
     body: Padding(
       padding: const .all(24.0),
       child: GridView.builder(
@@ -47,6 +48,7 @@ class ChapterCard extends StatelessWidget {
   );
 
   Widget _chapterCardContent(BuildContext context, Chapter chapter) {
+    final colorScheme = Theme.of(context).colorScheme;
     final topBanner = Expanded(
       flex: 3,
       child: Container(
@@ -55,8 +57,8 @@ class ChapterCard extends StatelessWidget {
             begin: .topLeft,
             end: .bottomRight,
             colors: [
-              Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
-              Theme.of(context).colorScheme.primary,
+              colorScheme.primary.withValues(alpha: 0.7),
+              colorScheme.primary,
             ],
           ),
         ),
@@ -70,17 +72,11 @@ class ChapterCard extends StatelessWidget {
               child: Icon(
                 chapter.icon,
                 size: 120,
-                color: Theme.of(
-                  context,
-                ).colorScheme.onPrimary.withValues(alpha: 0.15),
+                color: colorScheme.onPrimary.withValues(alpha: 0.15),
               ),
             ),
             // Main focused icon
-            Icon(
-              chapter.icon,
-              size: 64,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
+            Icon(chapter.icon, size: 64, color: colorScheme.onPrimary),
           ],
         ),
       ),
@@ -133,7 +129,7 @@ class ChapterCard extends StatelessWidget {
     );
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         topBanner, // Colored Header
         bottomContent, // Text and Data

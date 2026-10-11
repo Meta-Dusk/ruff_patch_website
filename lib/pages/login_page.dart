@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:capstone_website/core/app_assets.dart';
 import 'package:capstone_website/core/app_fonts.dart';
 import 'package:capstone_website/services/auth_service.dart';
+import 'package:capstone_website/widgets/global_appbar.dart';
 import 'package:capstone_website/widgets/google_logo.dart';
 
 class LoginPage extends StatefulWidget {
@@ -241,6 +242,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
+      appBar: const GlobalAppBar(title: "Ruff Patch", showNavToggle: false),
       body: Center(
         child: SingleChildScrollView(
           padding: const .all(24.0),
