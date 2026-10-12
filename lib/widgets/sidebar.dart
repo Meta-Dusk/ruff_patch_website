@@ -104,7 +104,7 @@ class _DrawerSidebarHeader extends StatelessWidget {
     child: Row(
       mainAxisAlignment: .spaceBetween,
       children: [
-        Expanded(child: Image.asset(AppAssets.pixelLogo, fit: .contain)),
+        Image.asset(AppAssets.pixelLogo, height: 48, fit: .contain),
         IconButton(
           icon: const Icon(Icons.close),
           color: Theme.of(context).colorScheme.onPrimary,

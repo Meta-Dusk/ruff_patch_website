@@ -18,26 +18,28 @@ class _ResourcesPageState extends State<ResourcesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final categoryGrid = _CategoryGrid(
-      onCategorySelected: (cat) => setState(() => _selectedCategory = cat),
-    );
+    final selectedCategory = _selectedCategory;
 
-    final categoryDetailView = _CategoryDetailView(
-      category: _selectedCategory!,
-      selectedCity: _selectedCity,
-      onCityChanged: (city) => setState(() => _selectedCity = city),
-      onBack: () => setState(() {
-        _selectedCategory = null;
-        _selectedCity = null;
-      }),
-    );
+    final content = selectedCategory == null
+        ? _CategoryGrid(
+            onCategorySelected: (cat) {
+              setState(() => _selectedCategory = cat);
+            },
+          )
+        : _CategoryDetailView(
+            category: selectedCategory,
+            selectedCity: _selectedCity,
+            onCityChanged: (city) => setState(() => _selectedCity = city),
+            onBack: () => setState(() {
+              _selectedCategory = null;
+              _selectedCity = null;
+            }),
+          );
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: const GlobalAppBar(title: "Resources"),
-      body: Center(
-        child: _selectedCategory == null ? categoryGrid : categoryDetailView,
-      ),
+      body: Center(child: content),
     );
   }
 }
