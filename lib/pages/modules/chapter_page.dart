@@ -186,6 +186,7 @@ class _QuizBanner extends StatelessWidget {
 
     final quizStatus = Row(
       mainAxisAlignment: .center,
+      mainAxisSize: .min,
       children: [
         Icon(
           hasCompletedQuiz ? Icons.check_circle : Icons.quiz_outlined,
@@ -193,17 +194,20 @@ class _QuizBanner extends StatelessWidget {
           size: 28,
         ),
         const SizedBox(width: 10),
-        Text(
-          hasCompletedQuiz
-              ? 'Quiz Passed! (${progress.quizScore}/${progress.quizTotal})'
-              : 'Ready to test your knowledge?',
-          style: TextStyle(
-            fontSize: 24,
-            fontFamily: AppFonts.born2B,
-            fontWeight: .bold,
-            color: hasCompletedQuiz
-                ? Colors.green.shade700
-                : colorScheme.onSurface,
+        Flexible(
+          child: Text(
+            hasCompletedQuiz
+                ? 'Quiz Passed! (${progress.quizScore}/${progress.quizTotal})'
+                : 'Ready to test your knowledge?',
+            textAlign: .center,
+            style: TextStyle(
+              fontSize: 22,
+              fontFamily: AppFonts.born2B,
+              fontWeight: .bold,
+              color: hasCompletedQuiz
+                  ? Colors.green.shade700
+                  : colorScheme.onSurface,
+            ),
           ),
         ),
       ],
@@ -224,7 +228,7 @@ class _QuizBanner extends StatelessWidget {
     );
 
     return Container(
-      padding: const .all(32),
+      padding: const .symmetric(horizontal: 20, vertical: 28),
       decoration: BoxDecoration(
         color: hasCompletedQuiz
             ? Colors.green.withValues(alpha: 0.08)

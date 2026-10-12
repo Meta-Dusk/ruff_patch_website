@@ -100,7 +100,10 @@ class _QuizPageState extends State<QuizPage> {
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
-          child: Padding(padding: const .all(32.0), child: quizResultsView),
+          child: SingleChildScrollView(
+            padding: const .symmetric(horizontal: 24.0, vertical: 24.0),
+            child: quizResultsView,
+          ),
         ),
       ),
     );
@@ -155,7 +158,7 @@ class _QuizQuestionView extends StatelessWidget {
             isSelected: selectedOptionIndex == i,
             onTap: () => onOptionSelected(i),
           ),
-        const Spacer(),
+        const SizedBox(height: 32),
         SizedBox(
           width: double.infinity,
           height: 60,
