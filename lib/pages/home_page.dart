@@ -6,6 +6,7 @@ import 'package:capstone_website/core/app_routes.dart';
 import 'package:capstone_website/models/chapter_progress.dart';
 import 'package:capstone_website/services/progress_service.dart';
 import 'package:capstone_website/widgets/global_appbar.dart';
+import 'package:capstone_website/widgets/news/announcements_section.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -25,6 +26,8 @@ class HomePage extends StatelessWidget {
             _WelcomeHeader(isMobile: isMobile),
             const SizedBox(height: 32),
             const _HomeProgressCard(),
+            const SizedBox(height: 32),
+            NewsAndAnnouncementsSection(isMobile: isMobile),
           ],
         ),
       ),
